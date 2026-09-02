@@ -18,12 +18,10 @@ export const InteractiveSphere = (props:any) => {
     useFrame((state, delta)=> {
 
         const objectiveScale = hovered ? 1.5 : 1 // identifica que escala debe de haber en la esfera por el hober
-        const newScale = MathUtils.lerp(meshRef.current.scale.x, objectiveScale, 0.1) // genera la nueva escala 
-
+        
         if (meshRef.current){
-            meshRef.current.scale.x = newScale // se carga la nueva escala en el eje x
-            meshRef.current.scale.z = newScale
-            meshRef.current.scale.y = newScale
+            const newScale = MathUtils.lerp(meshRef.current.scale.x, objectiveScale, 0.1) // genera la nueva escala 
+            meshRef.current.scale.set(newScale, newScale, newScale)
         }
     })
 
