@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export const useHud = () => {
 
-    const [cubeVx, setCubeVx] = useState<number>(0);
+    const [cubeVx, setCubeVx] = useState<number>(1);
 
     return {
         cubeVx,
