@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { SpinningBox } from './animation/SpinningBox'
 import { useHud } from './UI /HUDHook'
+import { InteractiveSphere } from './animation/InteractiveSphere'
 
 export const App = () => {
 
@@ -34,10 +35,10 @@ export const App = () => {
         <SpinningBox position={[-1.5, 0, 0]} castShadow cubeVx={cubeVx}/>
 
         {/* La esfera sigue estática (por ahora) */}
-        <mesh position={[1.5, 0, 0]} castShadow>
+        <InteractiveSphere position={[1.5, 0, 0]} castShadow>
           <sphereGeometry/>
           <meshStandardMaterial />
-        </mesh>
+        </InteractiveSphere>
 
         {/* Suelo */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.5, 0]} receiveShadow>
