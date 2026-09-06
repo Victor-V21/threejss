@@ -4,6 +4,7 @@ import { OrbitControls } from '@react-three/drei'
 import { SpinningBox } from './animation/SpinningBox'
 import { useHud } from './UI /HUDHook'
 import { InteractiveSphere } from './animation/InteractiveSphere'
+import { PersonModel } from './animation/PersonModel'
 
 export const App = () => {
 
@@ -31,14 +32,17 @@ export const App = () => {
         <ambientLight intensity={0.5}/>
         <directionalLight position={[5, 5, 5]} castShadow />
 
-        {/* 1. Reemplazamos el mesh estático por el SpinningBox */}
-        <SpinningBox position={[-1.5, 0, 0]} castShadow cubeVx={cubeVx}/>
+        {/* Cubo */}
+        <SpinningBox position={[-3, 0, 0]} castShadow cubeVx={cubeVx}/>
 
-        {/* La esfera sigue estática (por ahora) */}
-        <InteractiveSphere position={[1.5, 0, 0]} castShadow>
+        {/* Esfera */}
+        <InteractiveSphere position={[0, 0, 0]} castShadow>
           <sphereGeometry/>
           <meshStandardMaterial />
         </InteractiveSphere>
+
+        {/* modelo 3D GLTF */}
+        <PersonModel position={[3,-1,0]} scale={0.5}/>
 
         {/* Suelo */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.5, 0]} receiveShadow>
