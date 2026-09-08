@@ -59,7 +59,7 @@ export const App = () => {
       <KeyboardControls map={keyboardMap}>
         <div className="w-screen h-screen bg-neutral-900">
           <Canvas shadows>
-            <OrbitControls />
+            {/* <OrbitControls /> */}
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 5, 5]} castShadow />
 
@@ -77,9 +77,8 @@ export const App = () => {
                   <meshStandardMaterial />
                 </InteractiveSphere>
               </RigidBody>
-              DSSSSSS
               {/* --- EL PERSONAJE --- */}
-              <PersonModel scale={0.4} />
+              <PersonModel position={[3, 2, 0]} />
               {/* Suelo */}
               <RigidBody type="fixed">
                 <mesh
