@@ -5,6 +5,8 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { CapsuleCollider, RigidBody } from "@react-three/rapier";
 import { useEffect, useRef } from "react";
 
+import * as THREE from "three";
+
 export const PersonModel = (props: any) => {
   // referencia del modelo
   const modelRef = useRef<any>(null);
@@ -42,54 +44,50 @@ export const PersonModel = (props: any) => {
   useFrame(() => {
     const { forward, backward, left, right } = get();
     const velocity = rigidBodyRef.current.linvel();
+    const speed = 5;
 
-    let moveX = 0;
-    let moveZ = 0;
-    const speed = 2;
+    // 1. Recoger el input WASD "Puro"
+    const input = new THREE.Vector3(0, 0, 0);
 
-    // calculamos el movimiento simple
-    if (forward) moveZ += speed;
-    if (backward) moveZ -= speed;
-    if (left) moveX += speed;
-    if (right) moveX -= speed;
+    if (forward) input.z -= 1;
+    if (backward) input.z += 1;
+    if (left) input.x -= 1;
+    if (right) input.x += 1;
 
-    rigidBodyRef.current.setLinvel({ x: moveX, y: velocity.y, z: moveZ }, true);
+    // Normalizamos para no caminar al doble de velocidad en diagonal
+    input.normalize().multiplyScalar(speed);
 
-    if (moveX !== 0 || moveZ !== 0) {
-      // calculamos el angulo hacia donde nos movemos
-      const angle = Math.atan2(moveX, moveZ);
+    // 2. MAGIA: Transformar el input a relativo a la cámara
+    // Obtenemos solo la rotación horizontal (Y) de la cámara
+    const cameraEuler = new THREE.Euler().setFromQuaternion(
+      camera.quaternion,
+      "YXZ",
+    );
 
-      if (modelRef.current) {
-        modelRef.current.rotation.y = angle;
-      }
-    }
+    // Aplicamos ese ángulo de la cámara a nuestras teclas
+    input.applyEuler(new THREE.Euler(0, cameraEuler.y, 0));
 
-    //  Sistema de camara 3ra persona
+    // 3. Aplicar las físicas (movimiento relativo)
+    rigidBodyRef.current.setLinvel(
+      { x: input.x, y: velocity.y, z: input.z },
+      true,
+    );
 
+    // 4. Rotar el personaje
+    // Forzamos al personaje a mirar siempre hacia donde apunta el ratón (estilo shooter)
     if (modelRef.current) {
-      // extraemos la posicición de la capsula
-      const charPos = rigidBodyRef.current.translation();
-
-      // extreamos el angulo de rotación actual del personaje
-      const currentAngle = modelRef.current.rotation.y;
-
-      // las distancias que tendremos de la camara
-      const cameraDistance = 5;
-      const cameraheight = 3;
-
-      // calculamos la posición IDEAL de la caramara usando trigonometria
-      const idealX = charPos.x - Math.sin(currentAngle) * cameraDistance;
-      const idealZ = charPos.z - Math.cos(currentAngle) * cameraDistance;
-      const idealY = charPos.y + cameraheight;
-
-      const lerpSpeed = 0.1;
-
-      camera.position.x += (idealX - camera.position.x) * lerpSpeed;
-      camera.position.y += (idealY - camera.position.y) * lerpSpeed;
-      camera.position.z += (idealZ - camera.position.z) * lerpSpeed;
-
-      camera.lookAt(charPos.x, charPos.y + 1, charPos.z);
+      modelRef.current.rotation.y = cameraEuler.y + Math.PI;
     }
+
+    // 5. Cámara en 3ra Persona (Sobre el hombro)
+    const charPos = rigidBodyRef.current.translation();
+
+    // Primero, obligamos a la cámara a pararse exactamente en la cabeza del personaje
+    camera.position.set(charPos.x, charPos.y + 1.5, charPos.z);
+
+    // Luego, empujamos la cámara hacia atrás y hacia un lado de forma relativa a su vista
+    camera.translateZ(4);
+    camera.translateX(1);
   });
 
   return (

@@ -1,6 +1,10 @@
 // App.tsx
 import { Canvas } from "@react-three/fiber";
-import { KeyboardControls, OrbitControls } from "@react-three/drei";
+import {
+  KeyboardControls,
+  OrbitControls,
+  PointerLockControls,
+} from "@react-three/drei";
 import { SpinningBox } from "./animation/SpinningBox";
 import { useHud } from "./UI /HUDHook";
 import { InteractiveSphere } from "./animation/InteractiveSphere";
@@ -60,6 +64,7 @@ export const App = () => {
         <div className="w-screen h-screen bg-neutral-900">
           <Canvas shadows>
             {/* <OrbitControls /> */}
+            <PointerLockControls />
             <ambientLight intensity={0.5} />
             <directionalLight position={[5, 5, 5]} castShadow />
 
