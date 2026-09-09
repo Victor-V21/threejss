@@ -86,8 +86,8 @@ export const PersonModel = (props: any) => {
     camera.position.set(charPos.x, charPos.y + 1.5, charPos.z);
 
     // Luego, empujamos la cámara hacia atrás y hacia un lado de forma relativa a su vista
-    camera.translateZ(4);
-    camera.translateX(1);
+    camera.translateZ(0);
+    camera.translateX(0);
   });
 
   return (
